@@ -1,8 +1,8 @@
 # Hi there 👋
 
-# :computer: **Programador JR**  
-# :books: Manejo de 4 idiomas  
-# 🇻🇪 Venezolano en Argentina 🇦🇷  
+ :computer: **Programador JR**  
+ :books: Manejo de 4 idiomas  
+ 🇻🇪 Venezolano en Argentina 🇦🇷  
 
 ## 🌐 Contacto
 
