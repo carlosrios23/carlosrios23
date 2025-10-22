@@ -2,12 +2,13 @@ name: Update README with latest commits
 
 on:
   schedule:
-    - cron: "30 */12 * * *"   # 30 min después del otro para evitar solaparse
+    - cron: "30 */12 * * *"
   workflow_dispatch:
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -17,9 +18,15 @@ jobs:
           echo "" >> commits.md
           git log -n 10 --pretty=format:"- %s (%h) [%ci]" >> commits.md
 
-      - name: Update README
+      - name: Update README safely
         run: |
-          sed -i '/<!--COMMITS_SECTION_START-->/, /<!--COMMITS_SECTION_END-->/c\<!--COMMITS_SECTION_START-->\n'"$(cat commits.md)"'\n<!--COMMITS_SECTION_END-->' README.md
+          # Leemos el contenido de commits.md de forma segura (escapando caracteres)
+          COMMITS_CONTENT=$(cat commits.md | sed 's/[&/\]/\\&/g')
+          awk -v new_content="$COMMITS_CONTENT" '
+            /<!--COMMITS_SECTION_START-->/ {print; print new_content; in_section=1; next}
+            /<!--COMMITS_SECTION_END-->/ {in_section=0}
+            !in_section
+          ' README.md > temp.md && mv temp.md README.md
 
       - name: Commit changes
         run: |
