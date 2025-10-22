@@ -5,6 +5,9 @@ on:
     - cron: "30 */12 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write   
+
 jobs:
   update-readme:
     runs-on: ubuntu-latest
@@ -20,7 +23,6 @@ jobs:
 
       - name: Update README safely
         run: |
-          # Leemos el contenido de commits.md de forma segura (escapando caracteres)
           COMMITS_CONTENT=$(cat commits.md | sed 's/[&/\]/\\&/g')
           awk -v new_content="$COMMITS_CONTENT" '
             /<!--COMMITS_SECTION_START-->/ {print; print new_content; in_section=1; next}
